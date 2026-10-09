@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme tokens: light by default, `.dark` on <html> switches the palette */
+:root {
+  --paper: 244 246 251;
+  --card: 255 255 255;
+  --ink: 14 21 37;
+  --muted: 91 100 120;
+  --awsdeep: 201 111 0;
+  --line: rgba(14, 21, 37, 0.09);
+  --dot: rgba(14, 21, 37, 0.09);
+  color-scheme: light;
+}
+.dark {
+  --paper: 8 13 26;
+  --card: 16 24 42;
+  --ink: 233 237 246;
+  --muted: 148 160 184;
+  --awsdeep: 255 181 71;
+  --line: rgba(255, 255, 255, 0.09);
+  --dot: rgba(255, 255, 255, 0.07);
+  color-scheme: dark;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply bg-paper text-ink font-sans antialiased; transition: background-color .4s ease, color .4s ease; }
+section[id] { scroll-margin-top: 80px; }
+::selection { background: #FF9900; color: #0E1525; }
+
+.text-grad {
+  background: linear-gradient(100deg, #FF9900 0%, #F2552C 40%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-grad { background-image: linear-gradient(100deg, #FFB547 0%, #FF6B3D 40%, #A78BFA 100%); }
+.bg-grad { background: linear-gradient(100deg, #FF9900 0%, #F2552C 45%, #7C3AED 100%); }
+.dot-grid {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.glass {
+  background: rgb(var(--card) / 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgb(var(--card) / 0.9);
+  box-shadow: 0 10px 30px -10px rgba(14,21,37,0.25);
+}
+.dark .glass { border-color: rgba(255,255,255,0.08); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.6); }
+.outline-num {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(var(--ink) / 0.22);
+}
+.reveal { opacity: 0; transform: translateY(28px); }
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+:focus-visible { outline: 2px solid #FF9900; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .animate-bob, .animate-drift, .animate-wave, .animate-bye, .animate-goodbye, .animate-byewave, .animate-breathe, .animate-swing { animation: none !important; }
+}
+
+/* Cursor guide */
+.cursor-ripple { animation: cursor-ripple 0.7s ease-out both; }
+@keyframes cursor-ripple { from { transform: scale(0.3); opacity: 0.9; } to { transform: scale(1.8); opacity: 0; } }
+.cursor-tap { animation: cursor-tap 0.45s ease-out both; }
+@keyframes cursor-tap { 0% { transform: scale(1); } 40% { transform: scale(0.9); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .cursor-ripple { animation: none; opacity: 0; } .cursor-tap { animation: none; } }
+
+/* Neon chips around the hero avatar */
+.chip-neon {
+  background: rgb(var(--card) / 0.88);
+  color: #0369A1;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 18px -4px rgba(56, 189, 248, 0.45);
+  backdrop-filter: blur(8px);
+}
+.dark .chip-neon {
+  background: rgba(10, 18, 36, 0.88);
+  color: #7DD3FC;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 22px -4px rgba(56, 189, 248, 0.55);
+}
