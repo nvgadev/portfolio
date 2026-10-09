@@ -30,7 +30,21 @@ export default function Hero({ theme }) {
     if (reduce) return undefined;
     const target = { x: 0, y: 0, z: 0, ex: 0, ey: 0 };
     const cur = { x: 0, y: 0, z: 0, ex: 0, ey: 0 };
+    // Touch screens have no hover: the avatar glances around on its own,
+    // and looks at wherever the visitor taps.
+    const touch = window.matchMedia('(hover: none)').matches;
+    let lastPointer = 0;
+    const wander = (t) => {
+      if (!touch || performance.now() - lastPointer < 2500) return;
+      const s = t / 1000;
+      target.ex = Math.sin(s * 0.9) * 0.8 + Math.sin(s * 2.3) * 0.2;
+      target.ey = Math.sin(s * 0.6 + 1) * 0.6;
+      target.y = target.ex * 6;
+      target.x = -target.ey * 4;
+      target.z = target.ex * 1.5;
+    };
     const onMove = (e) => {
+      lastPointer = performance.now();
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       target.y = nx * 10;
@@ -47,7 +61,8 @@ export default function Hero({ theme }) {
       }
     };
     let raf;
-    const loop = () => {
+    const loop = (t = 0) => {
+      wander(t);
       cur.x += (target.x - cur.x) * 0.06;
       cur.y += (target.y - cur.y) * 0.06;
       cur.z += (target.z - cur.z) * 0.06;
@@ -62,9 +77,11 @@ export default function Hero({ theme }) {
     };
     loop();
     window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerdown', onMove, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerdown', onMove);
     };
   }, []);
 

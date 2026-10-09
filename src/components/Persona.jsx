@@ -53,7 +53,7 @@ export function PersonaCard({ real, className = '' }) {
         style={{ transform: real ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
       >
         <div className="backface-hidden absolute inset-0 flex items-end justify-center">
-          <AvatarEyes className="h-full" alt={`3D avatar of ${profile.name}`} />
+          <AvatarEyes className="h-full w-auto" alt={`3D avatar of ${profile.name}`} />
         </div>
         <div className="backface-hidden absolute inset-0 flex items-end justify-center" style={{ transform: 'rotateY(180deg)' }}>
           <img
