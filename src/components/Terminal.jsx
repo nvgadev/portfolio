@@ -100,7 +100,7 @@ export default function Terminal() {
   }, [tab]);
 
   return (
-    <div className="w-[23rem] overflow-hidden rounded-2xl border border-white/10 bg-[#0d1424]/95 shadow-[0_30px_80px_-20px_rgba(37,99,235,0.45)] backdrop-blur">
+    <div className="w-[23rem] overflow-hidden rounded-2xl border border-white/10 bg-[#0d1424]/95 shadow-[0_30px_80px_-20px_rgba(37,99,235,0.45)]">
       <div className="flex items-center gap-1.5 border-b border-white/10 px-3 pt-2.5">
         <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />

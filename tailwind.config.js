@@ -24,7 +24,7 @@ export default {
       },
       keyframes: {
         bob: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
-        drift: { '0%,100%': { transform: 'translate(0,0) scale(1)' }, '50%': { transform: 'translate(40px,-30px) scale(1.08)' } },
+        drift: { '0%,100%': { transform: 'translate3d(0,0,0)' }, '50%': { transform: 'translate3d(40px,-30px,0)' } },
         wave: {
           '0%, 60%, 100%': { transform: 'rotate(0deg)' },
           '10%': { transform: 'rotate(-12deg)' },
@@ -59,6 +59,7 @@ export default {
           '0%,100%': { transform: 'translateY(0) rotate(-5deg)' },
           '50%': { transform: 'translateY(-14px) rotate(5deg)' },
         },
+        pendulum: { '0%,100%': { transform: 'rotate(-6deg)' }, '50%': { transform: 'rotate(6deg)' } },
         pop: { '0%': { transform: 'scale(0.6) translateY(10px)', opacity: '0' }, '100%': { transform: 'scale(1) translateY(0)', opacity: '1' } },
       },
       animation: {
@@ -70,6 +71,7 @@ export default {
         byewave: 'byewave 2.8s ease-in-out infinite',
         breathe: 'breathe 4.5s ease-in-out infinite',
         swing: 'swing 4s ease-in-out infinite',
+        pendulum: 'pendulum 3.6s ease-in-out infinite',
         pop: 'pop 0.5s cubic-bezier(.2,1.4,.4,1) both',
       },
     },

@@ -24,7 +24,7 @@
   color-scheme: dark;
 }
 
-html { scroll-behavior: smooth; }
+
 body { @apply bg-paper text-ink font-sans antialiased; transition: background-color .4s ease, color .4s ease; }
 section[id] { scroll-margin-top: 80px; }
 ::selection { background: #FF9900; color: #0E1525; }
@@ -53,15 +53,18 @@ section[id] { scroll-margin-top: 80px; }
   color: transparent;
   -webkit-text-stroke: 1.5px rgb(var(--ink) / 0.22);
 }
-.reveal { opacity: 0; transform: translateY(28px); }
+.reveal { opacity: 0; }
+/* keyframes (not a transition) so it never fights the tilt cards' own transform */
+.reveal.is-in { opacity: 1; animation: reveal-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+@keyframes reveal-in { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
 .preserve-3d { transform-style: preserve-3d; }
 .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 :focus-visible { outline: 2px solid #FF9900; outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1 !important; transform: none !important; }
-  .animate-bob, .animate-drift, .animate-wave, .animate-bye, .animate-goodbye, .animate-byewave, .animate-breathe, .animate-swing { animation: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .animate-bob, .animate-drift, .animate-wave, .animate-bye, .animate-goodbye, .animate-byewave, .animate-breathe, .animate-swing, .animate-pendulum { animation: none !important; }
 }
 
 /* Cursor guide */
@@ -77,7 +80,6 @@ section[id] { scroll-margin-top: 80px; }
   color: #0369A1;
   border: 1px solid rgba(56, 189, 248, 0.45);
   box-shadow: 0 0 18px -4px rgba(56, 189, 248, 0.45);
-  backdrop-filter: blur(8px);
 }
 .dark .chip-neon {
   background: rgba(10, 18, 36, 0.88);

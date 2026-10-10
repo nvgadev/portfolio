@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { navLinks, profile } from '../data/profile';
+import { scrollToId } from '../scroll';
 
 export default function Navbar({ theme, onToggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
@@ -8,16 +9,28 @@ export default function Navbar({ theme, onToggleTheme }) {
   const [active, setActive] = useState('');
 
   useEffect(() => {
-    const onScroll = () => {
+    // At most one measurement per frame while scrolling
+    let ticking = false;
+    const update = () => {
+      ticking = false;
       setScrolled(window.scrollY > 40);
       let cur = '';
       for (const l of navLinks) {
         const el = document.getElementById(l.id);
         if (el && el.getBoundingClientRect().top <= 140) cur = l.id;
       }
+      // the last section can't reach the top of the screen; at the bottom of the page it's the active one
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (atBottom && navLinks.length) cur = navLinks[navLinks.length - 1].id;
       setActive(cur);
     };
-    onScroll();
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    update();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -25,13 +38,13 @@ export default function Navbar({ theme, onToggleTheme }) {
   const go = (id) => (e) => {
     e.preventDefault();
     setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    scrollToId(id);
   };
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open ? 'bg-card/80 backdrop-blur-md border-b border-line shadow-[0_8px_30px_-20px_rgba(14,21,37,0.4)]' : 'bg-transparent'
+        scrolled || open ? 'bg-card border-b border-line shadow-[0_8px_30px_-20px_rgba(14,21,37,0.4)]' : 'bg-transparent'
       }`}
     >
       <nav className="mx-auto flex h-16 md:h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">

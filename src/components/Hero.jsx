@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDown, BadgeCheck } from 'lucide-react';
 import { profile } from '../data/profile';
+import { scrollToId } from '../scroll';
 import Terminal from './Terminal';
 import Globe from './Globe';
 import { PersonaCard, FlipButton } from './Persona';
@@ -61,7 +62,9 @@ export default function Hero({ theme }) {
       }
     };
     let raf;
+    let onScreen = true;
     const loop = (t = 0) => {
+      if (!onScreen) return; // paused while the hero is scrolled away
       wander(t);
       cur.x += (target.x - cur.x) * 0.06;
       cur.y += (target.y - cur.y) * 0.06;
@@ -76,10 +79,17 @@ export default function Hero({ theme }) {
       raf = requestAnimationFrame(loop);
     };
     loop();
+    const io = new IntersectionObserver(([e]) => {
+      const was = onScreen;
+      onScreen = e.isIntersecting;
+      if (onScreen && !was) raf = requestAnimationFrame(loop);
+    });
+    if (stage.current) io.observe(stage.current);
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerdown', onMove, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onMove);
     };
@@ -99,7 +109,7 @@ export default function Hero({ theme }) {
 
   const go = (id) => (e) => {
     e.preventDefault();
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    scrollToId(id);
   };
 
   return (
@@ -108,9 +118,9 @@ export default function Hero({ theme }) {
         {/* Aurora background */}
         <div className="absolute inset-0 dot-grid" aria-hidden="true" />
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="animate-drift absolute -left-32 top-10 h-[34rem] w-[34rem] rounded-full bg-[#FFB547]/40 blur-[110px]" />
-          <div className="animate-drift absolute right-[-8rem] top-[-6rem] h-[36rem] w-[36rem] rounded-full bg-[#7C3AED]/25 blur-[120px]" style={{ animationDelay: '-5s' }} />
-          <div className="animate-drift absolute bottom-[-10rem] left-1/3 h-[32rem] w-[40rem] rounded-full bg-[#38BDF8]/30 blur-[120px]" style={{ animationDelay: '-9s' }} />
+          <div className="animate-drift absolute -left-56 -top-14 h-[48rem] w-[48rem]" style={{ background: 'radial-gradient(closest-side, rgba(255,181,71,0.38), rgba(255,181,71,0.12) 55%, transparent)' }} />
+          <div className="animate-drift absolute right-[-15rem] top-[-13rem] h-[50rem] w-[50rem]" style={{ background: 'radial-gradient(closest-side, rgba(124,58,237,0.24), rgba(124,58,237,0.08) 55%, transparent)', animationDelay: '-5s' }} />
+          <div className="animate-drift absolute bottom-[-17rem] left-[28%] h-[46rem] w-[54rem]" style={{ background: 'radial-gradient(closest-side, rgba(56,189,248,0.28), rgba(56,189,248,0.09) 55%, transparent)', animationDelay: '-9s' }} />
         </div>
 
         {/* 3D globe */}
@@ -158,7 +168,7 @@ export default function Hero({ theme }) {
                   </span>
                 ))}
                 <span className="absolute hidden md:block" style={{ left: '-14%', top: '9%', transform: 'translateZ(140px)' }}>
-                  <span className="animate-bob inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-aws/50 bg-card/90 px-3.5 py-2 text-ink shadow-[0_0_24px_-6px_rgba(255,153,0,0.6)] backdrop-blur" style={{ animationDelay: '-2s' }}>
+                  <span className="animate-bob inline-flex items-center gap-2 whitespace-nowrap rounded-2xl border border-aws/50 bg-card/95 px-3.5 py-2 text-ink shadow-[0_0_24px_-6px_rgba(255,153,0,0.6)]" style={{ animationDelay: '-2s' }}>
                     <BadgeCheck size={16} className="text-aws" />
                     <span className="leading-tight">
                       <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-awsdeep">Certified</span>

@@ -398,13 +398,13 @@ export function Skills() {
   );
 }
 
-// Hanging AWS badge that swings gently
+// AWS badge hanging from a pin on a short lanyard; it swings like a pendulum
+// around the pin, so the string, ring and badge always stay connected.
 function AwsBadge() {
   return (
-    <div className="relative mx-auto flex flex-col items-center">
-      <span className="h-10 w-px bg-gradient-to-b from-transparent to-[#4FC3F7]" aria-hidden="true" />
-      <div className="animate-swing relative h-52 w-48" style={{ transformOrigin: '50% -40px' }}>
-        <svg viewBox="0 0 200 220" className="absolute inset-0 h-full w-full drop-shadow-[0_24px_40px_rgba(30,136,229,0.45)]" aria-hidden="true">
+    <div className="relative mx-auto w-52 sm:w-56" style={{ aspectRatio: '200 / 296' }}>
+      <div className="animate-pendulum absolute inset-0" style={{ transformOrigin: '50% 3.4%', willChange: 'transform' }}>
+        <svg viewBox="0 0 200 296" className="h-full w-full overflow-visible" role="img" aria-label="AWS Certified DevOps Engineer – Professional badge">
           <defs>
             <linearGradient id="hexEdge" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#81D4FA" />
@@ -419,23 +419,33 @@ function AwsBadge() {
               <stop offset="0.5" stopColor="#1E88E5" />
               <stop offset="1" stopColor="#1565C0" />
             </linearGradient>
+            <radialGradient id="badgeGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stopColor="rgba(30,136,229,0.55)" />
+              <stop offset="1" stopColor="rgba(30,136,229,0)" />
+            </radialGradient>
+            <clipPath id="hexInner">
+              <polygon points="100,92 176,136 176,224 100,268 24,224 24,136" />
+            </clipPath>
           </defs>
-          <polygon points="100,6 190,58 190,162 100,214 10,162 10,58" fill="url(#hexFill)" stroke="url(#hexEdge)" strokeWidth="7" />
-          <polygon points="100,22 176,66 176,154 100,198 24,154 24,66" fill="none" stroke="rgba(129,212,250,0.25)" strokeWidth="1.5" />
-          <clipPath id="hexInner">
-            <polygon points="100,22 176,66 176,154 100,198 24,154 24,66" />
-          </clipPath>
-          <rect x="24" y="147" width="152" height="22" fill="url(#ribbon)" clipPath="url(#hexInner)" />
-          <text x="100" y="158.5" textAnchor="middle" dominantBaseline="central" fill="#fff" fontSize="10.5" fontWeight="700" letterSpacing="2.6" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          {/* soft glow behind the badge (a gradient, not a filter, so it stays cheap to animate) */}
+          <ellipse cx="100" cy="190" rx="118" ry="122" fill="url(#badgeGlow)" />
+          {/* lanyard: two strands from the pin to the ring */}
+          <path d="M100 10 L88 62 M100 10 L112 62" stroke="#4FC3F7" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.85" />
+          <circle cx="100" cy="68" r="8" fill="none" stroke="#81D4FA" strokeWidth="3" />
+          {/* badge */}
+          <polygon points="100,76 190,128 190,232 100,284 10,232 10,128" fill="url(#hexFill)" stroke="url(#hexEdge)" strokeWidth="7" strokeLinejoin="round" />
+          <polygon points="100,92 176,136 176,224 100,268 24,224 24,136" fill="none" stroke="rgba(129,212,250,0.25)" strokeWidth="1.5" />
+          <text x="100" y="150" textAnchor="middle" fill="#fff" fontSize="38" fontWeight="800" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>aws</text>
+          <text x="100" y="176" textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="9.5" fontWeight="600" letterSpacing="3" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>CERTIFIED</text>
+          <text x="100" y="198" textAnchor="middle" fill="#fff" fontSize="15" fontWeight="700" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>DevOps Engineer</text>
+          <rect x="24" y="214" width="152" height="22" fill="url(#ribbon)" clipPath="url(#hexInner)" />
+          <text x="100" y="225.5" textAnchor="middle" dominantBaseline="central" fill="#fff" fontSize="10.5" fontWeight="700" letterSpacing="2.6" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
             PROFESSIONAL
           </text>
         </svg>
-        <div className="relative flex h-full flex-col items-center pt-10 text-center">
-          <p className="font-sans text-[34px] font-extrabold lowercase leading-none tracking-tight text-white">aws</p>
-          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/70">Certified</p>
-          <p className="mt-0.5 text-[15px] font-bold text-white">DevOps Engineer</p>
-        </div>
       </div>
+      {/* the pin it hangs from (does not swing) */}
+      <span className="absolute left-1/2 top-[3.4%] h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-[#FFD58A] to-[#FF9900] shadow-[0_0_12px_rgba(255,153,0,0.7)] ring-2 ring-white/30" aria-hidden="true" />
     </div>
   );
 }
@@ -490,8 +500,8 @@ export function Contact() {
   return (
     <section id="contact" className="px-5 pb-10 pt-6 sm:px-8">
       <div className="reveal relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-night text-white ring-1 ring-white/10">
-        <div className="animate-drift absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#FF9900]/25 blur-[100px]" aria-hidden="true" />
-        <div className="animate-drift absolute -left-10 -top-24 h-[28rem] w-[28rem] rounded-full bg-[#7C3AED]/35 blur-[110px]" style={{ animationDelay: '-6s' }} aria-hidden="true" />
+        <div className="animate-drift absolute -right-40 -bottom-24 h-[38rem] w-[38rem]" style={{ background: 'radial-gradient(closest-side, rgba(255,153,0,0.24), rgba(255,153,0,0.08) 55%, transparent)' }} aria-hidden="true" />
+        <div className="animate-drift absolute -left-36 -top-48 h-[44rem] w-[44rem]" style={{ background: 'radial-gradient(closest-side, rgba(124,58,237,0.34), rgba(124,58,237,0.1) 55%, transparent)', animationDelay: '-6s' }} aria-hidden="true" />
         <div className="relative grid items-end gap-4 lg:grid-cols-[1fr_minmax(0,24rem)]">
           <div className="px-6 pb-6 pt-14 sm:px-12 lg:pb-16 lg:pt-16">
             <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.3em] text-[#7DD3FC]">Contact</p>

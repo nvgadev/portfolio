@@ -46,7 +46,7 @@ export default function Globe({ progressRef, theme = 'light' }) {
     } catch {
       return undefined; // no WebGL: the hero still works without the globe
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     el.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -153,10 +153,27 @@ export default function Globe({ progressRef, theme = 'light' }) {
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
+    // Only render while the globe is on screen and the tab is visible
+    let onScreen = true;
+    const run = () => {
+      cancelAnimationFrame(raf);
+      if (onScreen && !document.hidden) {
+        clock.getDelta();
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const io = new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      run();
+    });
+    io.observe(el);
+    document.addEventListener('visibilitychange', run);
     tick();
 
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
+      document.removeEventListener('visibilitychange', run);
       ro.disconnect();
       window.removeEventListener('pointermove', onMove);
       renderer.dispose();
